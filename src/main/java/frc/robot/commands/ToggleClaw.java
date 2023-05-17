@@ -7,15 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-public class ManualControlArm extends CommandBase {
-  private Arm m_arm;
+public class ToggleClw extends CommandBase {
+  private Claw m_claw;
   private double m_multiplier;
 
-  public ManualControlShoulder(double multiplier, Arm arm) {
-    m_arm = arm;
-    m_multiplier = multiplier;
+  public ToggleClaw(double multiplier, Claw claw) {
+    m_claw = claw;
     
-    addRequirements(m_arm);
+    addRequirements(m_claw);
   }
 
   // Called when the command is initially scheduled.

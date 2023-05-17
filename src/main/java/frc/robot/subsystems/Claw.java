@@ -17,35 +17,38 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.*;
 
-public class Arm extends SubsystemBase {
+public class Claw extends SubsystemBase {
   private static double kDt = 0.02;
   private static double intendedPosition = 0.0;
 
   private static double minRotation = 0.0; // Figure this out later
   private static double maxRotation = 32.0; // Figure this out later
 
-  private final CANSparkMax m_armMotor;
-  private final RelativeEncoder m_armEncoder;
+  private final CANSparkMax m_clawMotor;
+  private final RelativeEncoder m_clawEncoder;
+
+  ArrayList<Double> amperageHistory = new ArrayList<Double>(Collections.nCopies(20, 0.0));
+  double amperageHistorySum = 0.0;
 
   private final TrapezoidProfile.Constraints m_constraints =
-    new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY, ARM_MAX_VELOCITY);
+    new TrapezoidProfile.Constraints(CLAW_MAX_VELOCITY, CLAW_MAX_VELOCITY);
   private final ProfiledPIDController m_controller =
-    new ProfiledPIDController(ARM_P, ARM_I, ARM_D, m_constraints, kDt);
+    new ProfiledPIDController(CLAW_P, CLAW_I, CLAW_D, m_constraints, kDt);
 
 
   public Arm() {
-    m_armMotor = new CANSparkMax(1, MotorType.kBrushless);
-    m_armMotor.restoreFactoryDefaults();
-    m_armMotor.setIdleMode(IdleMode.kBrake);
-    m_armEncoder = m_armMotor.getEncoder();
-    m_armEncoder.setPosition(0.0);
+    m_clawMotor = new CANSparkMax(2, MotorType.kBrushless);
+    m_clawMotor.restoreFactoryDefaults();
+    m_clawMotor.setIdleMode(IdleMode.kBrake);
+    m_clawEncoder = m_armMotor.getEncoder();
+    m_clawEncoder.setPosition(0.0);
 
-    m_armEncoder.setPositionConversionFactor(1.0 / 360.0 * 2.0 * Math.PI * 1.5); // Do some measurements to figure this out
+    m_clawEncoder.setPositionConversionFactor(1.0 / 360.0 * 2.0 * Math.PI * 1.5); // Do some measurements to figure this out
   }
 
   @Override
   public void periodic() {
-    m_armMotor.set(m_controller.calculate(m_armEncoder.getPosition(), intendedPosition));
+    m_clawMotor.set(m_controller.calculate(m_armEncoder.getPosition(), intendedPosition));
 
     SmartDashboard.putNumber("Arm Intended Position", intendedPosition);
     SmartDashboard.putNumber("Arm Relative Position", m_armEncoder.getPosition());
@@ -55,8 +58,27 @@ public class Arm extends SubsystemBase {
     intendedPosition = setPoint;
   }
 
+  private boolean detectGamePiece(){
+    // keep the last 10 values of ampage in ampageHistory
+    amperageHistory.remove(0);
+    amperageHistory.add(m_clawMotor.getOutputCurrent());
+    amperageHistorySum = 0.0;
+    for (int i=0;i<amperageHistory.size();i++) {
+      amperageHistorySum += amperageHistory.get(i);
+    }
+    // may neep to tune the max average ampage and/or number of samples
+    // if amperage draw exceeds 19 amps for eachof the last 10 cycles assume over retract
+    if ((amperageHistorySum / 20) > 19){
+      System.out.println("amperage over!");
+      return true;
+    } else {
+      return false;
+    }
+        
+  }
+
   public void manualControl(double multiplier) {
-    double movement = RobotContainer.m_driverController.getRightY() * multiplier
+    double movement = RobotContainer.m_driverController.getLeftY() * multiplier
 
     if RobotContainer.m_driverController.getRightY() > ARM_DEADBAND or RobotContainer.m_driverController.getRightY() < -ARM_DEADBAND {
       if (intendedPosition <= minRotation && movement > 0){

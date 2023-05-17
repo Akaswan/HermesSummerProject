@@ -19,7 +19,7 @@ public class RobotContainer {
   public static final Arm m_arm = new Arm();
 
   public RobotContainer() {
-    m_arm.setDefaultCommand(new ManualArmControl(1.0, m_arm));
+    m_arm.setDefaultCommand(new ManualArmControl(ARM_MANUAL_SPEED, m_arm));
 
     configureBindings();
   }
