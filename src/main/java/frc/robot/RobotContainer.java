@@ -23,11 +23,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    m_driverController.x().whileTrue(new SetArmPosition(MID_CONE_SETPOINT, m_arm));
+    m_driverController.x().onTrue(new SetArmPosition(MID_CONE_SETPOINT, m_arm));
+    m_driverController.x().onFalse(new SetArmPosition(STOW_SETPOINT, m_arm));
 
-    m_driverController.a().whileTrue(new SetArmPosition(MID_CUBE_SETPOINT, m_arm));
+    m_driverController.a().onTrue(new SetArmPosition(MID_CUBE_SETPOINT, m_arm));
+    m_driverController.a().onFalse(new SetArmPosition(STOW_SETPOINT, m_arm));
 
-    m_driverController.b().whileTrue(new SetArmPosition(LOW_GOAL_SETPOINT, m_arm));
+    m_driverController.b().onTrue(new SetArmPosition(LOW_GOAL_SETPOINT, m_arm));
+    m_driverController.b().onFalse(new SetArmPosition(STOW_SETPOINT, m_arm));
   }
 
   public Command getAutonomousCommand() {
