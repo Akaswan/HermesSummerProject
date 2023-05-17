@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-public class ManualControlArm extends CommandBase {
+public class ManualArmControl extends CommandBase {
   private Arm m_arm;
   private double m_multiplier;
 
-  public ManualControlShoulder(double multiplier, Arm arm) {
+  public ManualArmControl(double multiplier, Arm arm) {
     m_arm = arm;
     m_multiplier = multiplier;
     
