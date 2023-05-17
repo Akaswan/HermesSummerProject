@@ -14,6 +14,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.RobotContainer;
+
 public class Arm extends SubsystemBase {
   private static double kDt = 0.02;
   public static double intendedPosition = 0.0;
@@ -50,5 +52,9 @@ public class Arm extends SubsystemBase {
 
   public void setPosition(double setPoint) {
     intendedPosition = setPoint;
+  }
+
+  public void manualControl(double multiplier) {
+    intendedPosition += (RobotContainer.m_driverController.getRightY() * multiplier);
   }
 }

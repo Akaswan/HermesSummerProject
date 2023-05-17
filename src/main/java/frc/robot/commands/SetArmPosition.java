@@ -12,9 +12,10 @@ public class SetArmPosition extends InstantCommand {
   private Arm m_arm;
  
   public SetArmPosition(double setPoint, Arm arm) {
-    addRequirements(arm);
     m_setPoint = setPoint;
     m_arm = arm;
+
+    addRequirements(m_arm);
   }
 
   @Override
