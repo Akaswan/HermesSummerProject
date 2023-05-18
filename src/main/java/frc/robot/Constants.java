@@ -14,7 +14,7 @@ public class Constants {
     // Global Constants \\
     public static final double KDT = 0.02;
     
-    public static final double STICK_DEADBAND = 0.1;
+    public static final double STICK_DEADBAND = 0.06;
 
     // Arm Constants \\
 
@@ -78,10 +78,10 @@ public class Constants {
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.47625;
 
     public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
-    new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
-    new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
-    new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
-    new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0));
+        new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0));
 
     public static final double MAX_SPEED = Units.feetToMeters(16.3);
     public static final double MAX_ANGULAR_VELOCITY = 10.0; //TODO: This must be tuned to specific robot
