@@ -9,12 +9,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
+  public static CTREConfigs ctreConfigs;
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
+    ctreConfigs = new CTREConfigs();
+    
     m_robotContainer = new RobotContainer();
   }
 

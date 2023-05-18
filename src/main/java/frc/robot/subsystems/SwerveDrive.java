@@ -102,7 +102,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - (-(m_navx.getYaw()+180))) : Rotation2d.fromDegrees(-(m_navx.getYaw()+180));
+        return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - (-(gyro.getYaw()+180))) : Rotation2d.fromDegrees(-(gyro.getYaw()+180));
     }
 
     public void resetModulesToAbsolute(){

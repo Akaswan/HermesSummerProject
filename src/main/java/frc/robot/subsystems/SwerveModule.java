@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
-import frc.robot.RobotContainer;
+import frc.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -87,12 +87,12 @@ public class SwerveModule {
 
     private void configAngleEncoder(){        
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(RobotContainer.ctreConfigs.swerveCanCoderConfig);
+        angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor(){
         mAngleMotor.configFactoryDefault();
-        mAngleMotor.configAllSettings(RobotContainer.ctreConfigs.swerveAngleFXConfig);
+        mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
         mAngleMotor.setInverted(ANGLE_MOTOR_INVERT);
         mAngleMotor.setNeutralMode(ANGLE_NEUTRAL_MODE);
         resetToAbsolute();
@@ -100,7 +100,7 @@ public class SwerveModule {
 
     private void configDriveMotor(){        
         mDriveMotor.configFactoryDefault();
-        mDriveMotor.configAllSettings(RobotContainer.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.setInverted(DRIVE_MOTOR_INVERT);
         mDriveMotor.setNeutralMode(DRIVE_NEUTRAL_MODE);
         mDriveMotor.setSelectedSensorPosition(0);

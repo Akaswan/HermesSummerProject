@@ -25,23 +25,18 @@ public class RobotContainer {
 
   public static XboxController m_driverController = new XboxController(0);
 
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
-
   public static final SwerveDrive m_swerveDrive = new SwerveDrive();
   public static final Arm m_arm = new Arm();
   public static final Claw m_claw = new Claw();
   public static final TestMotor m_testMotor = new TestMotor();
-  public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   public RobotContainer() {
     m_swerveDrive.setDefaultCommand(
       new TeleopSwerve(
           m_swerveDrive, 
-          () -> -m_driverController.getRawAxis(translationAxis), 
-          () -> -m_driverController.getRawAxis(strafeAxis), 
-          () -> -m_driverController.getRawAxis(rotationAxis), 
+          () -> -m_driverController.getRawAxis(XboxController.Axis.kLeftY.value), 
+          () -> -m_driverController.getRawAxis(XboxController.Axis.kLeftX.value), 
+          () -> -m_driverController.getRawAxis(XboxController.Axis.kRightX.value), 
           () -> new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value).getAsBoolean()
       )
   );
