@@ -29,14 +29,11 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  private final JoystickButton zeroGyro = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-  private final JoystickButton robotCentric = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
-
-  private final SwerveDrive m_swerveDrive = new SwerveDrive();
+  public static final SwerveDrive m_swerveDrive = new SwerveDrive();
   public static final Arm m_arm = new Arm();
   public static final Claw m_claw = new Claw();
   public static final TestMotor m_testMotor = new TestMotor();
-  public static CTREConfigs ctreConfigs = new CTREConfigs();
+  public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   public RobotContainer() {
     m_swerveDrive.setDefaultCommand(
@@ -45,22 +42,25 @@ public class RobotContainer {
           () -> -m_driverController.getRawAxis(translationAxis), 
           () -> -m_driverController.getRawAxis(strafeAxis), 
           () -> -m_driverController.getRawAxis(rotationAxis), 
-          () -> robotCentric.getAsBoolean()
+          () -> new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value).getAsBoolean()
       )
   );
+
     m_arm.setDefaultCommand(new ManualArmControl(ARM_MANUAL_SPEED, m_arm));
 
     configureBindings();
   }
 
   private void configureBindings() {
+    // Driver Controls \\
+    new JoystickButton(m_driverController, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> m_swerveDrive.zeroGyro()));
+
+    // Co-Driver Controls \\
     new JoystickButton(m_driverController, XboxController.Button.kY.value).onTrue(new SetArmPosition(MID_CONE_SETPOINT, m_arm));
     new JoystickButton(m_driverController, XboxController.Button.kX.value).onTrue(new SetArmPosition(MID_CUBE_SETPOINT, m_arm));
     new JoystickButton(m_driverController, XboxController.Button.kB.value).onTrue(new SetArmPosition(LOW_GOAL_SETPOINT, m_arm));
     new JoystickButton(m_driverController, XboxController.Button.kA.value).onTrue(new ToggleClaw(m_claw));
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).onTrue(new RunTestMotor(0.5, m_testMotor));
-
-    zeroGyro.onTrue(new InstantCommand(() -> m_swerveDrive.zeroGyro()));
   }
 
   public Command getAutonomousCommand() {
