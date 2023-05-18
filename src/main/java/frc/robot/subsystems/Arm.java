@@ -54,7 +54,7 @@ public class Arm extends SubsystemBase {
   public void manualControl(double multiplier) {
     double movement = RobotContainer.m_driverController.getRightY() * multiplier;
 
-    if (RobotContainer.m_driverController.getRightY() > ARM_DEADBAND || RobotContainer.m_driverController.getRightY() < -ARM_DEADBAND) {
+    if (RobotContainer.m_driverController.getRightY() > STICK_DEADBAND || RobotContainer.m_driverController.getRightY() < -STICK_DEADBAND) {
       if (intendedPosition <= ARM_MIN_ROTATIONS && movement > 0){
         intendedPosition += movement;
       } else if (intendedPosition >= ARM_MAX_ROTATIONS && movement < 0) {

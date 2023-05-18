@@ -106,7 +106,7 @@ public class Claw extends SubsystemBase {
   public void manualControl(double multiplier) {
     double movement = RobotContainer.m_driverController.getLeftY() * multiplier;
 
-    if (RobotContainer.m_driverController.getRightY() > ARM_DEADBAND || RobotContainer.m_driverController.getRightY() < -ARM_DEADBAND) {
+    if (RobotContainer.m_driverController.getRightY() > STICK_DEADBAND || RobotContainer.m_driverController.getRightY() < -STICK_DEADBAND) {
       if (intendedPosition <= CLAW_MIN_ROTATIONS && movement > 0){
         intendedPosition += movement;
       } else if (intendedPosition >= CLAW_MAX_ROTATIONS && movement < 0) {
