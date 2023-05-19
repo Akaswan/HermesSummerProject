@@ -10,12 +10,12 @@ import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Robot;
 
+import static frc.robot.utilities.Constants.*;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
-
-import static frc.robot.Constants.*;
 
 public class SwerveModule {
     public int moduleNumber;

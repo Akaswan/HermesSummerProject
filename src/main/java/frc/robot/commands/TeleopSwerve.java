@@ -2,14 +2,14 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.SwerveDrive;
 
+import static frc.robot.utilities.Constants.*;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import static frc.robot.Constants.*;
 
 
 public class TeleopSwerve extends CommandBase {    

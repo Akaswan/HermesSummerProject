@@ -4,10 +4,10 @@
 
 package frc.robot.commands;
 
+import static frc.robot.utilities.Constants.*;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Claw;
-
-import static frc.robot.Constants.*;
 
 public class ToggleClaw extends InstantCommand {    
   private Claw m_claw;

@@ -1,4 +1,6 @@
-package frc.robot;
+package frc.robot.utilities;
+
+import static frc.robot.utilities.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -6,8 +8,6 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
-
-import static frc.robot.Constants.*;
 
 public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;

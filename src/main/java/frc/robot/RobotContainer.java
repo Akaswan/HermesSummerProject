@@ -4,11 +4,16 @@
 
 package frc.robot;
 
+import static frc.robot.utilities.Constants.*;
+
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CreatePath;
 import frc.robot.commands.ManualArmControl;
 import frc.robot.commands.RunTestMotor;
 import frc.robot.commands.SetArmPosition;
@@ -19,18 +24,36 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.TestMotor;
 
-import static frc.robot.Constants.*;
-
 public class RobotContainer {
 
+  // Controllers \\
   public static XboxController m_driverController = new XboxController(0);
 
+  // Subsystems \\
   public static final SwerveDrive m_swerveDrive = new SwerveDrive();
   public static final Arm m_arm = new Arm();
   public static final Claw m_claw = new Claw();
   public static final TestMotor m_testMotor = new TestMotor();
 
+  // Delcare Auto Plays \\
+  private final Command play1, play2;
+
+  // Sendable Chooser For Auto \\
+  public static SendableChooser<Command> m_auto_chooser;
+
   public RobotContainer() {
+
+    play1 = new WaitCommand(1);
+
+    play2 = new CreatePath(null, m_swerveDrive, "Test", 1.0, 1.5, null);
+
+    m_auto_chooser = new SendableChooser<>();
+
+    m_auto_chooser.setDefaultOption("Do Nothing", play1);
+    m_auto_chooser.addOption("Test", play2);
+
+    SmartDashboard.putData(m_auto_chooser);
+
     m_swerveDrive.setDefaultCommand(
       new TeleopSwerve(
           m_swerveDrive, 
@@ -59,6 +82,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return m_auto_chooser.getSelected();
   }
 }
