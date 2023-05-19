@@ -85,24 +85,24 @@ public class Claw extends SubsystemBase {
     }
   }
 
-  private boolean detectGamePiece() {
-    // keep the last 10 values of ampage in ampageHistory
-    amperageHistory.remove(0);
-    amperageHistory.add(m_clawMotor.getOutputCurrent());
-    amperageHistorySum = 0.0;
-    for (int i=0;i<amperageHistory.size();i++) {
-      amperageHistorySum += amperageHistory.get(i);
-    }
-    // may neep to tune the max average ampage and/or number of samples
-    // if amperage draw exceeds 19 amps for eachof the last 10 cycles assume over retract
-    if ((amperageHistorySum / 20) > 19){
-      System.out.println("amperage over!");
-      return true;
-    } else {
-      return false;
-    }
+  // private boolean detectGamePiece() {
+  //   // keep the last 10 values of ampage in ampageHistory
+  //   amperageHistory.remove(0);
+  //   amperageHistory.add(m_clawMotor.getOutputCurrent());
+  //   amperageHistorySum = 0.0;
+  //   for (int i=0;i<amperageHistory.size();i++) {
+  //     amperageHistorySum += amperageHistory.get(i);
+  //   }
+  //   // may neep to tune the max average ampage and/or number of samples
+  //   // if amperage draw exceeds 19 amps for eachof the last 10 cycles assume over retract
+  //   if ((amperageHistorySum / 20) > 19){
+  //     System.out.println("amperage over!");
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
         
-  }
+  // }
 
   public void manualControl(double multiplier) {
     double movement = RobotContainer.m_driverController.getLeftY() * multiplier;
