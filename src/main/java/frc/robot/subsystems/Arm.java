@@ -25,7 +25,7 @@ public class Arm extends SubsystemBase {
   private final RelativeEncoder m_armEncoder;
 
   private final TrapezoidProfile.Constraints m_constraints =
-    new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY, ARM_MAX_VELOCITY);
+    new TrapezoidProfile.Constraints(ARM_MAX_ACCELERATION, ARM_MAX_VELOCITY);
   private final ProfiledPIDController m_controller =
     new ProfiledPIDController(ARM_P, ARM_I, ARM_D, m_constraints, KDT);
 

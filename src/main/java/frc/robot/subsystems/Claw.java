@@ -31,7 +31,7 @@ public class Claw extends SubsystemBase {
   double amperageHistorySum = 0.0;
 
   private final TrapezoidProfile.Constraints m_constraints =
-    new TrapezoidProfile.Constraints(CLAW_MAX_VELOCITY, CLAW_MAX_VELOCITY);
+    new TrapezoidProfile.Constraints(CLAW_MAX_ACCELERATION, CLAW_MAX_VELOCITY);
   private final ProfiledPIDController m_controller =
     new ProfiledPIDController(CLAW_P, CLAW_I, CLAW_D, m_constraints, KDT);
 
