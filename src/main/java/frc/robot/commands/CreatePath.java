@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.utilities.CreateEventMap;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +40,6 @@ public class CreatePath extends SequentialCommandGroup {
     public CreatePath(Command preCommand, SwerveDrive m_drivebase, String pathName, double maxVelocity, double maxAcceleration, Command postCommand) {
         addRequirements(m_drivebase);
 
-        CreateEventMap createMap = new CreateEventMap(m_drivebase);
-
-        eventMap = createMap.createMap();
-
         List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup(pathName, 
              false, new PathConstraints(maxVelocity, maxAcceleration));
 
@@ -54,7 +50,7 @@ public class CreatePath extends SequentialCommandGroup {
                 new PIDConstants(3.5, 0.25, 0), // Translation
                 new PIDConstants(3.2, 0, 0), // Rotation
                 m_drivebase::setModuleStates, 
-                eventMap, 
+                RobotContainer.eventMap, 
                 true, 
                 m_drivebase
               );

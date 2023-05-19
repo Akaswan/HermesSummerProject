@@ -7,25 +7,29 @@ package frc.robot.utilities;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.commands.SetArmPosition;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveDrive;
+
+import static frc.robot.utilities.Constants.*;
 
 public class CreateEventMap {
 
   HashMap<String, Command> eventMap = new HashMap<>();
 
-  SwerveDrive m_drivebase;
-
+  SwerveDrive m_swerveDrive;
 
     /**
      * Creates an Event Map for pathplanner autos
      * 
-     * @param m_drivebase
+     * @param m_swerveDrive
      * 
      */
-    public CreateEventMap(SwerveDrive m_drivebase) {
-    this.m_drivebase = m_drivebase;
-
+    public CreateEventMap(SwerveDrive m_swerveDrive, Arm m_arm, Claw m_claw) {
+    this.m_swerveDrive = m_swerveDrive;
+    
+    eventMap.put("midCone", new SetArmPosition(MID_CONE_SETPOINT, m_arm));
   }
 
 

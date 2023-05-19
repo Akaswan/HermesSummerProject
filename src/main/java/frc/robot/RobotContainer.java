@@ -6,6 +6,8 @@ package frc.robot;
 
 import static frc.robot.utilities.Constants.*;
 
+import java.util.HashMap;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +25,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.TestMotor;
+import frc.robot.utilities.CreateEventMap;
 
 public class RobotContainer {
 
@@ -35,6 +38,9 @@ public class RobotContainer {
   public static final Claw m_claw = new Claw();
   public static final TestMotor m_testMotor = new TestMotor();
 
+  public static HashMap<String, Command> eventMap = new HashMap<>();
+  CreateEventMap createMap = new CreateEventMap(m_swerveDrive, m_arm, m_claw);
+
   // Delcare Auto Plays \\
   private final Command play1, play2;
 
@@ -42,6 +48,8 @@ public class RobotContainer {
   public static SendableChooser<Command> m_auto_chooser;
 
   public RobotContainer() {
+
+    eventMap = createMap.createMap();
 
     play1 = new WaitCommand(1);
 
