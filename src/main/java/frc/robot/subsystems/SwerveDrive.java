@@ -9,10 +9,14 @@ import static frc.robot.utilities.Constants.*;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +26,8 @@ public class SwerveDrive extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     private final AHRS gyro;
+
+    public HolonomicDriveController trajController;
 
     public SwerveDrive() {
         gyro = new AHRS(SPI.Port.kMXP, (byte)50);
@@ -41,6 +47,11 @@ public class SwerveDrive extends SubsystemBase {
         resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDriveOdometry(SWERVE_KINEMATICS, getYaw(), getModulePositions());
+
+        trajController = new HolonomicDriveController(
+            new PIDController(1, 0, 0), new PIDController(1, 0, 0),
+            new ProfiledPIDController(1, 0, 0, 
+                new TrapezoidProfile.Constraints(6.28, 3.14)));
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {

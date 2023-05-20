@@ -8,6 +8,7 @@ import static frc.robot.utilities.Constants.*;
 
 import java.util.HashMap;
 
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CreatePath;
+import frc.robot.commands.FollowPath;
 import frc.robot.commands.ManualArmControl;
 import frc.robot.commands.RunTestMotor;
-import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.subsystems.Arm;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.TestMotor;
 import frc.robot.utilities.CreateEventMap;
+import frc.robot.utilities.CreateTrajectory;
 
 public class RobotContainer {
 
@@ -37,6 +39,7 @@ public class RobotContainer {
   public static final Arm m_arm = new Arm();
   public static final Claw m_claw = new Claw();
   public static final TestMotor m_testMotor = new TestMotor();
+  public static final CreateTrajectory m_createTrajectory = new CreateTrajectory();
 
   public static HashMap<String, Command> eventMap = new HashMap<>();
   CreateEventMap createMap = new CreateEventMap(m_swerveDrive, m_arm, m_claw);
@@ -46,6 +49,8 @@ public class RobotContainer {
 
   // Sendable Chooser For Auto \\
   public static SendableChooser<Command> m_auto_chooser;
+
+  private Trajectory testTraj;
 
   public RobotContainer() {
 
@@ -80,11 +85,12 @@ public class RobotContainer {
   private void configureBindings() {
     // Driver Controls \\
     new JoystickButton(m_driverController, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> m_swerveDrive.zeroGyro()));
+    new JoystickButton(m_driverController, XboxController.Button.kBack.value).onTrue(new FollowPath(m_swerveDrive, m_createTrajectory));
 
     // Co-Driver Controls \\
-    new JoystickButton(m_driverController, XboxController.Button.kY.value).onTrue(new SetArmPosition(MID_CONE_SETPOINT, m_arm));
-    new JoystickButton(m_driverController, XboxController.Button.kX.value).onTrue(new SetArmPosition(MID_CUBE_SETPOINT, m_arm));
-    new JoystickButton(m_driverController, XboxController.Button.kB.value).onTrue(new SetArmPosition(LOW_GOAL_SETPOINT, m_arm));
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT)));
+    new JoystickButton(m_driverController, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT)));
+    new JoystickButton(m_driverController, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT)));
     new JoystickButton(m_driverController, XboxController.Button.kA.value).onTrue(new ToggleClaw(m_claw));
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).onTrue(new RunTestMotor(0.5, m_testMotor));
   }
