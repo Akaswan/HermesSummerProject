@@ -2,6 +2,7 @@ package frc.robot.utilities;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -61,6 +62,8 @@ public class Constants {
     public static final double CLAW_MAX_ACCELERATION = 0.75;
 
     // Drivebase Constants \\
+
+    public static final Pose2d GRID_1 = new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
 
     public static final COTSFalconSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
     COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);

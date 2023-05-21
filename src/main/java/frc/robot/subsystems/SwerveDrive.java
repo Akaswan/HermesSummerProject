@@ -16,7 +16,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -121,6 +125,28 @@ public class SwerveDrive extends SubsystemBase {
             mod.resetToAbsolute();
         }
     }
+
+    public Trajectory generateTrajectory(Pose2d start, Pose2d end) {
+        double mps = 0;
+
+        for(SwerveModule mod : mSwerveMods){
+          mps += mod.getState().speedMetersPerSecond;    
+        }
+    
+        mps /= mSwerveMods.length;
+    
+        TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(8));
+        config.setKinematics(SWERVE_KINEMATICS);
+        config.setStartVelocity(mps);
+    
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+            start,
+            null,
+            end,
+            config);
+
+        return trajectory;
+      }
 
     @Override
     public void periodic(){

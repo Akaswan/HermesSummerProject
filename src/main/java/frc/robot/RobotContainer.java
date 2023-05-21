@@ -8,7 +8,6 @@ import static frc.robot.utilities.Constants.*;
 
 import java.util.HashMap;
 
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,12 +21,12 @@ import frc.robot.commands.ManualArmControl;
 import frc.robot.commands.RunTestMotor;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ToggleClaw;
+import frc.robot.subsystems.APTag;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.TestMotor;
 import frc.robot.utilities.CreateEventMap;
-import frc.robot.utilities.CreateTrajectory;
 
 public class RobotContainer {
 
@@ -38,8 +37,8 @@ public class RobotContainer {
   public static final SwerveDrive m_swerveDrive = new SwerveDrive();
   public static final Arm m_arm = new Arm();
   public static final Claw m_claw = new Claw();
+  public static final APTag m_apTag = new APTag();
   public static final TestMotor m_testMotor = new TestMotor();
-  public static final CreateTrajectory m_createTrajectory = new CreateTrajectory();
 
   public static HashMap<String, Command> eventMap = new HashMap<>();
   CreateEventMap createMap = new CreateEventMap(m_swerveDrive, m_arm, m_claw);
@@ -49,8 +48,6 @@ public class RobotContainer {
 
   // Sendable Chooser For Auto \\
   public static SendableChooser<Command> m_auto_chooser;
-
-  private Trajectory testTraj;
 
   public RobotContainer() {
 
@@ -73,9 +70,8 @@ public class RobotContainer {
           () -> -m_driverController.getRawAxis(XboxController.Axis.kLeftY.value), 
           () -> -m_driverController.getRawAxis(XboxController.Axis.kLeftX.value), 
           () -> -m_driverController.getRawAxis(XboxController.Axis.kRightX.value), 
-          () -> new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value).getAsBoolean()
-      )
-  );
+          () -> new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value).getAsBoolean())
+      );
 
     m_arm.setDefaultCommand(new ManualArmControl(ARM_MANUAL_SPEED, m_arm));
 
@@ -85,7 +81,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Driver Controls \\
     new JoystickButton(m_driverController, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> m_swerveDrive.zeroGyro()));
-    new JoystickButton(m_driverController, XboxController.Button.kBack.value).onTrue(new FollowPath(m_swerveDrive, m_createTrajectory));
+    new JoystickButton(m_driverController, XboxController.Button.kBack.value).onTrue(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1));
 
     // Co-Driver Controls \\
     new JoystickButton(m_driverController, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT)));
