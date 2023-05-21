@@ -7,6 +7,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import static frc.robot.utilities.Constants.*;
 
+import java.util.ArrayList;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -138,10 +140,12 @@ public class SwerveDrive extends SubsystemBase {
         TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(8));
         config.setKinematics(SWERVE_KINEMATICS);
         config.setStartVelocity(mps);
+
+        ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
     
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             start,
-            null,
+            interiorWaypoints,
             end,
             config);
 

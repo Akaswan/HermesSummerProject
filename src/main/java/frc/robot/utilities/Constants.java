@@ -64,6 +64,15 @@ public class Constants {
     // Drivebase Constants \\
 
     public static final Pose2d GRID_1 = new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_2 = new Pose2d(Units.feetToMeters(4.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_3 = new Pose2d(Units.feetToMeters(6.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_4 = new Pose2d(Units.feetToMeters(8.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_5 = new Pose2d(Units.feetToMeters(10.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_6 = new Pose2d(Units.feetToMeters(12.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_7 = new Pose2d(Units.feetToMeters(14.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_8 = new Pose2d(Units.feetToMeters(16.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_9 = new Pose2d(Units.feetToMeters(18.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+
 
     public static final COTSFalconSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
     COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);

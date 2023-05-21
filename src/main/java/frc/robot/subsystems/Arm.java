@@ -36,7 +36,6 @@ public class Arm extends SubsystemBase {
     m_armMotor.setIdleMode(IdleMode.kBrake);
     m_armEncoder = m_armMotor.getEncoder();
     m_armEncoder.setPosition(0.0);
-
     // m_armEncoder.setPositionConversionFactor(1.0 / 360.0 * 2.0 * Math.PI * 1.5); // Do some measurements to figure this out
   }
 

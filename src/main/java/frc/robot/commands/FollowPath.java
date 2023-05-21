@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -49,8 +50,11 @@ public class FollowPath extends CommandBase {
 
     m_swerveDrive.setModuleStates(moduleStates);
 
-    SmartDashboard.putNumber("Trajectory X", adjustedSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("Trajectory Y", adjustedSpeeds.vyMetersPerSecond);
+    SmartDashboard.putNumber("Trajectory X", Units.metersToFeet(adjustedSpeeds.vxMetersPerSecond));
+    SmartDashboard.putNumber("Trajectory Y", Units.metersToFeet(adjustedSpeeds.vyMetersPerSecond));
+    SmartDashboard.putNumber("Trajectory A", Units.radiansToDegrees(adjustedSpeeds.omegaRadiansPerSecond));
+    SmartDashboard.putNumber("Time Elapsed", timeElapsed);
+    SmartDashboard.putNumber("Total", m_trajectory.getTotalTimeSeconds());
 
     timeElapsed += KDT;
   }
@@ -62,6 +66,6 @@ public class FollowPath extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return timeElapsed >= m_trajectory.getTotalTimeSeconds();
   }
 }

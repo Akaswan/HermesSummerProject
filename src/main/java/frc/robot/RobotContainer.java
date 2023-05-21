@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CreatePath;
@@ -63,6 +64,12 @@ public class RobotContainer {
     m_auto_chooser.addOption("Test", play2);
 
     SmartDashboard.putData(m_auto_chooser);
+
+    SmartDashboard.putData("1-Mid", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))));
+    // SmartDashboard.putData("1-Low", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))));
+    SmartDashboard.putData("2-Mid", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))));
+    // SmartDashboard.putData("2-Low", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))));
+
 
     m_swerveDrive.setDefaultCommand(
       new TeleopSwerve(
