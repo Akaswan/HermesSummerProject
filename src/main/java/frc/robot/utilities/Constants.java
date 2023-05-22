@@ -73,7 +73,7 @@ public class Constants {
     public static final Pose2d GRID_7 = new Pose2d(Units.feetToMeters(16.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
     public static final Pose2d GRID_8 = new Pose2d(Units.feetToMeters(18.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
 
-    public static final COTSFalconSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
+    public static final COTSFalconSwerveConstants chosenModule =
     COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
     public static final boolean CAN_CODER_INVERT = chosenModule.canCoderInvert;
