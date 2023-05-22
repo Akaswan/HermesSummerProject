@@ -50,6 +50,28 @@ public class RobotContainer {
   // Sendable Chooser For Auto \\
   public static SendableChooser<Command> m_auto_chooser;
 
+  public static ParallelCommandGroup[] lowGridCommands = {
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_0), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_3), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_4), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_5), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_6), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_7), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_8), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT)))};
+
+  public static ParallelCommandGroup[] midGridCommands = {
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_0), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_3), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_4), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_5), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_6), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_7), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))),
+    new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_8), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT)))};
+
   public RobotContainer() {
 
     eventMap = createMap.createMap();
@@ -64,12 +86,6 @@ public class RobotContainer {
     m_auto_chooser.addOption("Test", play2);
 
     SmartDashboard.putData(m_auto_chooser);
-
-    SmartDashboard.putData("1-Mid", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))));
-    // SmartDashboard.putData("1-Low", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))));
-    SmartDashboard.putData("2-Mid", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))));
-    // SmartDashboard.putData("2-Low", new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))));
-
 
     m_swerveDrive.setDefaultCommand(
       new TeleopSwerve(

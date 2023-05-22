@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utilities.CTREConfigs;
@@ -24,6 +25,12 @@ public class Robot extends TimedRobot {
 
     ctreConfigs = new CTREConfigs();
     m_robotContainer = new RobotContainer();
+    
+    SmartDashboard.putNumber("Trajectory X", 0);
+    SmartDashboard.putNumber("Trajectory Y", 0);
+    SmartDashboard.putNumber("Trajectory A", 0);
+    SmartDashboard.putNumber("Time Elapsed", 0);
+    SmartDashboard.putNumber("Total", 0);
   }
 
   @Override

@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class SwerveDrive extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
@@ -38,6 +39,13 @@ public class SwerveDrive extends SubsystemBase {
     public SwerveDrive() {
         gyro = new AHRS(SPI.Port.kMXP, (byte)50);
         zeroGyro();
+
+
+        for (int i=0; i <= 8; i++) {
+            SmartDashboard.putBoolean("Grid-" + i + " Low", false);
+            SmartDashboard.putBoolean("Grid-" + i + " Mid", false);
+        }
+
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Mod0.constants),
@@ -155,6 +163,44 @@ public class SwerveDrive extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
+
+        boolean[] gridLow = {
+            SmartDashboard.getBoolean("Grid-0 Low", false),
+            SmartDashboard.getBoolean("Grid-1 Low", false),
+            SmartDashboard.getBoolean("Grid-2 Low", false),
+            SmartDashboard.getBoolean("Grid-3 Low", false),
+            SmartDashboard.getBoolean("Grid-4 Low", false),
+            SmartDashboard.getBoolean("Grid-5 Low", false),
+            SmartDashboard.getBoolean("Grid-6 Low", false),
+            SmartDashboard.getBoolean("Grid-7 Low", false),
+            SmartDashboard.getBoolean("Grid-8 Low", false),
+            SmartDashboard.getBoolean("Grid-9 Low", false)
+        };
+
+        boolean[] gridMid = {
+            SmartDashboard.getBoolean("Grid-0 Mid", false),
+            SmartDashboard.getBoolean("Grid-1 Mid", false),
+            SmartDashboard.getBoolean("Grid-2 Mid", false),
+            SmartDashboard.getBoolean("Grid-3 Mid", false),
+            SmartDashboard.getBoolean("Grid-4 Mid", false),
+            SmartDashboard.getBoolean("Grid-5 Mid", false),
+            SmartDashboard.getBoolean("Grid-6 Mid", false),
+            SmartDashboard.getBoolean("Grid-7 Mid", false),
+            SmartDashboard.getBoolean("Grid-8 Mid", false),
+            SmartDashboard.getBoolean("Grid-9 Mid", false)
+        };
+
+        for (int i = 0; i < gridLow.length; i++) {
+            if (gridLow[i]) {
+                SmartDashboard.putBoolean("Grid-" + i + " Low", false);
+                RobotContainer.lowGridCommands[i].schedule();
+            }
+
+            if (gridMid[i]) {
+                SmartDashboard.putBoolean("Grid-" + i + " Mid", false);
+                RobotContainer.midGridCommands[i].schedule();
+            }
+        }
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
