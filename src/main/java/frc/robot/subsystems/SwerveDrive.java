@@ -79,7 +79,7 @@ public class SwerveDrive extends SubsystemBase {
 
         trajController = new HolonomicDriveController(
             new PIDController(1, 0, 0), new PIDController(1, 0, 0),
-            new ProfiledPIDController(1, 0, 0, 
+            new ProfiledPIDController(1, 0.25, .01, 
                 new TrapezoidProfile.Constraints(6.28, 3.14)));
     }
 

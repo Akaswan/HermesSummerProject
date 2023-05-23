@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -47,15 +48,15 @@ public class FollowPath extends CommandBase {
     Trajectory.State goal = m_trajectory.sample(timeElapsed);
 
     ChassisSpeeds adjustedSpeeds = m_swerveDrive.trajController.calculate(
-      m_swerveDrive.getPose(), goal, goal.poseMeters.getRotation());
+      m_swerveDrive.getPose(), goal, Rotation2d.fromRadians(goal.curvatureRadPerMeter));
 
     SwerveModuleState[] moduleStates = SWERVE_KINEMATICS.toSwerveModuleStates(adjustedSpeeds);
 
     m_swerveDrive.setModuleStates(moduleStates);
 
-    SmartDashboard.putNumber("Trajectory X", Units.metersToFeet(adjustedSpeeds.vxMetersPerSecond));
-    SmartDashboard.putNumber("Trajectory Y", Units.metersToFeet(adjustedSpeeds.vyMetersPerSecond));
-    SmartDashboard.putNumber("Trajectory A", Units.radiansToDegrees(adjustedSpeeds.omegaRadiansPerSecond));
+    SmartDashboard.putNumber("Trajectory X", goal.poseMeters.getX());
+    SmartDashboard.putNumber("Trajectory Y", goal.poseMeters.getY());
+    SmartDashboard.putNumber("Trajectory A", Units.radiansToDegrees(goal.curvatureRadPerMeter));
     SmartDashboard.putNumber("Time Elapsed", timeElapsed);
     SmartDashboard.putNumber("Total", m_trajectory.getTotalTimeSeconds());
 
