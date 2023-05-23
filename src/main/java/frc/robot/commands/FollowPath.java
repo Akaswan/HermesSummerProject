@@ -36,6 +36,8 @@ public class FollowPath extends CommandBase {
   @Override
   public void initialize() {
     m_trajectory = m_swerveDrive.generateTrajectory(m_start, m_end);
+
+    m_swerveDrive.m_field.getObject("traj").setTrajectory(m_trajectory);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -67,5 +69,6 @@ public class FollowPath extends CommandBase {
   @Override
   public boolean isFinished() {
     return timeElapsed >= m_trajectory.getTotalTimeSeconds();
+    // return timeElapsed >= 20;
   }
 }

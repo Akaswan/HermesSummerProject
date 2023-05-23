@@ -4,7 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
@@ -21,6 +21,11 @@ public class SwerveModule {
     public int moduleNumber;
     private Rotation2d angleOffset;
     private Rotation2d lastAngle;
+
+    double m_currentAngle;
+
+    private double m_simDriveEncoderPosition;
+    private double m_simDriveEncoderVelocity;
 
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
@@ -52,7 +57,23 @@ public class SwerveModule {
         desiredState = CTREModuleState.optimize(desiredState, getState().angle); 
         setAngle(desiredState);
         setSpeed(desiredState, isOpenLoop);
+
+        var angle = desiredState.angle.getDegrees();
+        
+        if (RobotBase.isSimulation()) {
+            simUpdateDrivePosition(desiredState);
+            // simTurnPosition(angle); // TODO Determine why commented out in REVexample
+            m_currentAngle = angle;
+      
+          }
     }
+
+    private void simUpdateDrivePosition(SwerveModuleState state) {
+        m_simDriveEncoderVelocity = state.speedMetersPerSecond;
+        double distancePer20Ms = m_simDriveEncoderVelocity / 50.0;
+    
+        m_simDriveEncoderPosition += distancePer20Ms;
+      }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if(isOpenLoop){
@@ -73,8 +94,17 @@ public class SwerveModule {
     }
 
     private Rotation2d getAngle(){
-        return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), ANGLE_GEAR_RATIO));
+        if (Robot.isReal()){
+            return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), ANGLE_GEAR_RATIO));
+        } else {
+            return Rotation2d.fromDegrees(m_currentAngle);
+        }
+        
     }
+
+    public double getHeadingDegrees() {
+          return m_currentAngle;
+      }
 
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
@@ -107,16 +137,26 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(
-            Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(), WHEEL_CIRCUMFERENCE, DRIVE_GEAR_RATIO), 
-            getAngle()
-        ); 
+        if (RobotBase.isReal()) {
+            return new SwerveModuleState(
+                Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(), WHEEL_CIRCUMFERENCE, DRIVE_GEAR_RATIO), 
+                getAngle()
+            ); 
+        } else {
+            return new SwerveModuleState(m_simDriveEncoderVelocity, getAngle());
+        }
+
     }
 
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(
-            Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(), WHEEL_CIRCUMFERENCE, DRIVE_GEAR_RATIO), 
-            getAngle()
-        );
+        if (RobotBase.isReal()) {
+            return new SwerveModulePosition(
+                Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(), WHEEL_CIRCUMFERENCE, DRIVE_GEAR_RATIO), 
+                getAngle()
+            );
+        } else {
+            return new SwerveModulePosition(m_simDriveEncoderPosition, getAngle());
+        }
+
     }
 }

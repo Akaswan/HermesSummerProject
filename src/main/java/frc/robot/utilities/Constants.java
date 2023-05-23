@@ -63,15 +63,27 @@ public class Constants {
 
     // Drivebase Constants \\
 
-    public static final Pose2d GRID_0 = new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_1 = new Pose2d(Units.feetToMeters(4.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_2 = new Pose2d(Units.feetToMeters(6.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_3 = new Pose2d(Units.feetToMeters(8.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_4 = new Pose2d(Units.feetToMeters(10.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_5 = new Pose2d(Units.feetToMeters(12.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_6 = new Pose2d(Units.feetToMeters(14.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_7 = new Pose2d(Units.feetToMeters(16.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
-    public static final Pose2d GRID_8 = new Pose2d(Units.feetToMeters(18.0), Units.feetToMeters(2.0), Rotation2d.fromDegrees(180));
+    public static final Pose2d GRID_0 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(1.744), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_1 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(3.6099), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_2 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(5.4770), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_3 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(7.366), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_4 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(9.2628), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_5 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(11.1176), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_6 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(12.9887), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_7 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(14.8528), Rotation2d.fromDegrees(90));
+    public static final Pose2d GRID_8 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(16.6842), Rotation2d.fromDegrees(90));
+
+    public static final Pose2d[] GRID_POSITIONS = {
+        GRID_0,
+        GRID_1,
+        GRID_2,
+        GRID_3,
+        GRID_4,
+        GRID_5,
+        GRID_6,
+        GRID_7,
+        GRID_8
+    };
 
     public static final COTSFalconSwerveConstants chosenModule =
     COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);

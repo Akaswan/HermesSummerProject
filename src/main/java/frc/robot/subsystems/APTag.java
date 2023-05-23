@@ -122,6 +122,6 @@ public class APTag extends SubsystemBase {
     SmartDashboard.putNumber("VisionY", getPose2d().getY());
     SmartDashboard.putNumber("VisionA", getPose2d().getRotation().getDegrees());
 
-    RobotContainer.m_swerveDrive.resetOdometry(getPose2d());
+    // RobotContainer.m_swerveDrive.resetOdometry(getPose2d());
   }
 }

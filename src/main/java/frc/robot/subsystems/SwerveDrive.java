@@ -8,7 +8,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import static frc.robot.utilities.Constants.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.unmanaged.Unmanaged;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -18,28 +21,43 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.spline.Spline;
+import edu.wpi.first.math.spline.Spline.ControlVector;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.commands.FollowPath;
 
 public class SwerveDrive extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     private final AHRS gyro;
 
+    public final Field2d m_field = new Field2d();
+
     public HolonomicDriveController trajController;
+
+    private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); // TODO pass in id and canbus CAN.pigeon);
+
+    private double m_simYaw;
 
     public SwerveDrive() {
         gyro = new AHRS(SPI.Port.kMXP, (byte)50);
         zeroGyro();
 
+        SmartDashboard.putData("Field", m_field);
 
         for (int i=0; i <= 8; i++) {
             SmartDashboard.putBoolean("Grid-" + i + " Low", false);
@@ -60,7 +78,9 @@ public class SwerveDrive extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        swerveOdometry = new SwerveDriveOdometry(SWERVE_KINEMATICS, getYaw(), getModulePositions());
+        m_pigeon.setYaw(0);
+
+        swerveOdometry = new SwerveDriveOdometry(SWERVE_KINEMATICS, getYaw(), getModulePositions(), new Pose2d());
 
         trajController = new HolonomicDriveController(
             new PIDController(1, 0, 0), new PIDController(1, 0, 0),
@@ -127,7 +147,14 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - (-(gyro.getYaw()+180))) : Rotation2d.fromDegrees(-(gyro.getYaw()+180));
+        if (RobotBase.isReal()) {
+            return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - (-(gyro.getYaw()+180))) : Rotation2d.fromDegrees(-(gyro.getYaw()+180));
+        } else {
+            double[] ypr = new double[3];
+            m_pigeon.getYawPitchRoll(ypr);
+            return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+        }
+        
     }
 
     public void resetModulesToAbsolute(){
@@ -144,13 +171,19 @@ public class SwerveDrive extends SubsystemBase {
         }
     
         mps /= mSwerveMods.length;
-    
+        
+
         TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(8));
         config.setKinematics(SWERVE_KINEMATICS);
         config.setStartVelocity(mps);
 
         ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
     
+        List<Pose2d> poses = new ArrayList<>();
+
+        poses.add(start);
+        poses.add(end);
+
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             start,
             interiorWaypoints,
@@ -193,7 +226,7 @@ public class SwerveDrive extends SubsystemBase {
         for (int i = 0; i < gridLow.length; i++) {
             if (gridLow[i]) {
                 SmartDashboard.putBoolean("Grid-" + i + " Low", false);
-                RobotContainer.lowGridCommands[i].schedule();
+                new ParallelCommandGroup(new FollowPath(RobotContainer.m_swerveDrive, getPose(), GRID_POSITIONS[i]), new InstantCommand(() -> RobotContainer.m_arm.setPosition(LOW_GOAL_SETPOINT))).schedule();
             }
 
             if (gridMid[i]) {
@@ -207,5 +240,19 @@ public class SwerveDrive extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
+
+        m_field.setRobotPose(swerveOdometry.getPoseMeters());
+        SmartDashboard.putNumber("X", Units.metersToFeet(swerveOdometry.getPoseMeters().getX()));
+        SmartDashboard.putNumber("Y", Units.metersToFeet(swerveOdometry.getPoseMeters().getY()));
+        SmartDashboard.putNumber("A", (swerveOdometry.getPoseMeters().getRotation().getDegrees()));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+      ChassisSpeeds chassisSpeed = SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
+      m_simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
+  
+      Unmanaged.feedEnable(20);
+      m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
     }
 }

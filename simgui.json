@@ -15,10 +15,33 @@
       "/SmartDashboard/                      2-Mid                      ": "Command",
       "/SmartDashboard/1-Mid": "Command",
       "/SmartDashboard/2-Mid": "Command",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Follow Path": "Command",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
     "windows": {
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "arrowSize": 28,
+          "length": 0.6603999733924866,
+          "selectable": false,
+          "style": "Box/Image",
+          "weight": 3.0,
+          "width": 0.6603999733924866
+        },
+        "image": "C:\\Users\\Ari\\Downloads\\field23.png",
+        "traj": {
+          "arrowSize": 3,
+          "arrowWeight": 2.0,
+          "arrows": false,
+          "selectable": false,
+          "style": "Line"
+        },
+        "units": "inches",
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/SendableChooser[0]": {
         "window": {
           "visible": true
