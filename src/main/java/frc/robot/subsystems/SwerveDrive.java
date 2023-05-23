@@ -7,12 +7,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import static frc.robot.utilities.Constants.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
@@ -21,13 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.spline.Spline;
-import edu.wpi.first.math.spline.Spline.ControlVector;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -163,32 +158,34 @@ public class SwerveDrive extends SubsystemBase {
         }
     }
 
-    public Trajectory generateTrajectory(Pose2d start, Pose2d end) {
+    public Rotation2d getAngleToPose(Pose2d start, Pose2d end) {
+        double deltaX = end.getX() - start.getX();
+        double deltaY = end.getY() - start.getY();
+        double angleRad = Math.atan2(deltaY, deltaX);
+
+        
+        double angleDeg = Math.toDegrees(angleRad);
+
+        
+        angleDeg = (angleDeg + 360) % 360;
+
+        return Rotation2d.fromDegrees(angleDeg);
+    }
+
+    public PathPlannerTrajectory generateTrajectory(Pose2d start, Pose2d end) {
         double mps = 0;
 
         for(SwerveModule mod : mSwerveMods){
           mps += mod.getState().speedMetersPerSecond;    
         }
-    
-        mps /= mSwerveMods.length;
         
+        mps /= mSwerveMods.length;
 
-        TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(8));
-        config.setKinematics(SWERVE_KINEMATICS);
-        config.setStartVelocity(mps);
-
-        ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
-    
-        List<Pose2d> poses = new ArrayList<>();
-
-        poses.add(start);
-        poses.add(end);
-
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            start,
-            interiorWaypoints,
-            end,
-            config);
+        PathPlannerTrajectory trajectory = PathPlanner.generatePath(
+            new PathConstraints(4, 3), 
+            new PathPoint(start.getTranslation(), getAngleToPose(start, end), start.getRotation(), mps),
+            new PathPoint(end.getTranslation(), getAngleToPose(start, end), end.getRotation()) 
+        );
 
         return trajectory;
       }
@@ -231,7 +228,7 @@ public class SwerveDrive extends SubsystemBase {
 
             if (gridMid[i]) {
                 SmartDashboard.putBoolean("Grid-" + i + " Mid", false);
-                RobotContainer.midGridCommands[i].schedule();
+                new ParallelCommandGroup(new FollowPath(RobotContainer.m_swerveDrive, getPose(), GRID_POSITIONS[i]), new InstantCommand(() -> RobotContainer.m_arm.setPosition(MID_CONE_SETPOINT))).schedule();
             }
         }
 

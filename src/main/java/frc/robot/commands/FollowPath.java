@@ -29,6 +29,7 @@ public class FollowPath extends CommandBase {
     m_start = start;
     m_end = end;
 
+    addRequirements(m_swerveDrive);
     timeElapsed = 0;
   }
 
