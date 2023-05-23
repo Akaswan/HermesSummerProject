@@ -36,7 +36,8 @@
           "arrowWeight": 2.0,
           "arrows": false,
           "selectable": false,
-          "style": "Line"
+          "style": "Line",
+          "weight": 1.0
         },
         "units": "inches",
         "window": {

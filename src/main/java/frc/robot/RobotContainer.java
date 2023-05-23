@@ -69,28 +69,6 @@ public class RobotContainer {
 
     SmartDashboard.putData(m_auto_chooser);
 
-    lowGridCommands = new ParallelCommandGroup[] { 
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_0), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_3), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_4), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_5), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_6), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_7), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_8), new InstantCommand(() -> m_arm.setPosition(LOW_GOAL_SETPOINT)))};
-
-    midGridCommands = new ParallelCommandGroup[] {
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_0), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_2), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_3), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_4), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_5), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_6), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_7), new InstantCommand(() -> m_arm.setPosition(MID_CUBE_SETPOINT))),
-        new ParallelCommandGroup(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_8), new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT)))};
-
     m_swerveDrive.setDefaultCommand(
       new TeleopSwerve(
           m_swerveDrive, 
