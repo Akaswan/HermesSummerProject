@@ -26,11 +26,11 @@ public class Robot extends TimedRobot {
     ctreConfigs = new CTREConfigs();
     m_robotContainer = new RobotContainer();
     
-    SmartDashboard.putNumber("Trajectory X", 0);
-    SmartDashboard.putNumber("Trajectory Y", 0);
-    SmartDashboard.putNumber("Trajectory A", 0);
-    SmartDashboard.putNumber("Time Elapsed", 0);
-    SmartDashboard.putNumber("Total", 0);
+    // SmartDashboard.putNumber("Trajectory X", 0);
+    // SmartDashboard.putNumber("Trajectory Y", 0);
+    // SmartDashboard.putNumber("Trajectory A", 0);
+    // SmartDashboard.putNumber("Time Elapsed", 0);
+    // SmartDashboard.putNumber("Total", 0);
   }
 
   @Override

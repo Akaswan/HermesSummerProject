@@ -16,9 +16,12 @@ import frc.robot.subsystems.SwerveDrive;
 
 import static frc.robot.utilities.Constants.*;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+
 public class FollowPath extends CommandBase {
 
-  private Trajectory m_trajectory;
+  private PathPlannerTrajectory m_trajectory;
   private SwerveDrive m_swerveDrive;
   private Pose2d m_start;
   private Pose2d m_end;
@@ -37,7 +40,8 @@ public class FollowPath extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_trajectory = m_swerveDrive.generateTrajectory(m_start, m_end);
+    timeElapsed = 0;
+    m_trajectory = m_swerveDrive.generateTrajectory(m_start, m_end, Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0));
 
     m_swerveDrive.m_field.getObject("traj").setTrajectory(m_trajectory);
   }
@@ -45,22 +49,22 @@ public class FollowPath extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Trajectory.State goal = m_trajectory.sample(timeElapsed);
+    // PathPlannerState goal = m_trajectory.sample(timeElapsed);
 
-    ChassisSpeeds adjustedSpeeds = m_swerveDrive.trajController.calculate(
-      m_swerveDrive.getPose(), goal, Rotation2d.fromRadians(goal.curvatureRadPerMeter));
+    // ChassisSpeeds adjustedSpeeds = m_swerveDrive.trajController.calculate(
+    //   m_swerveDrive.getPose(), goal);
 
-    SwerveModuleState[] moduleStates = SWERVE_KINEMATICS.toSwerveModuleStates(adjustedSpeeds);
+    // SwerveModuleState[] moduleStates = SWERVE_KINEMATICS.toSwerveModuleStates(adjustedSpeeds);
 
-    m_swerveDrive.setModuleStates(moduleStates);
+    // m_swerveDrive.setModuleStates(moduleStates);
 
-    SmartDashboard.putNumber("Trajectory X", goal.poseMeters.getX());
-    SmartDashboard.putNumber("Trajectory Y", goal.poseMeters.getY());
-    SmartDashboard.putNumber("Trajectory A", Units.radiansToDegrees(goal.curvatureRadPerMeter));
-    SmartDashboard.putNumber("Time Elapsed", timeElapsed);
-    SmartDashboard.putNumber("Total", m_trajectory.getTotalTimeSeconds());
+    // SmartDashboard.putNumber("Trajectory X", goal.poseMeters.getX());
+    // SmartDashboard.putNumber("Trajectory Y", goal.poseMeters.getY());
+    // SmartDashboard.putNumber("Trajectory A", Units.radiansToDegrees(goal.curvatureRadPerMeter));
+    // SmartDashboard.putNumber("Time Elapsed", timeElapsed);
+    // SmartDashboard.putNumber("Total", m_trajectory.getTotalTimeSeconds());
 
-    timeElapsed += KDT;
+    // timeElapsed += KDT;
   }
 
   // Called once the command ends or is interrupted.

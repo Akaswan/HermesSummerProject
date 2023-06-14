@@ -116,10 +116,10 @@ public class APTag extends SubsystemBase {
     m_visA = currentData.getEntry("ta");
     m_poseArr = currentData.getEntry("botpose");
 
-    SmartDashboard.putNumberArray("bot pose", getBotPose());
-    SmartDashboard.putNumber("VisionX", getPose2d().getX());
-    SmartDashboard.putNumber("VisionY", getPose2d().getY());
-    SmartDashboard.putNumber("VisionA", getPose2d().getRotation().getDegrees());
+    // SmartDashboard.putNumberArray("bot pose", getBotPose());
+    // SmartDashboard.putNumber("VisionX", getPose2d().getX());
+    // SmartDashboard.putNumber("VisionY", getPose2d().getY());
+    // SmartDashboard.putNumber("VisionA", getPose2d().getRotation().getDegrees());
 
     // RobotContainer.m_swerveDrive.resetOdometry(getPose2d());
   }

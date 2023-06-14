@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +30,9 @@ public class Arm extends SubsystemBase {
   private final ProfiledPIDController m_controller =
     new ProfiledPIDController(ARM_P, ARM_I, ARM_D, m_constraints, KDT);
 
+  // private final PIDController m_controller =
+  //   new PIDController(ARM_P, ARM_I, ARM_D);
+
 
   public Arm() {
     m_armMotor = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
@@ -42,6 +46,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     m_armMotor.set(m_controller.calculate(m_armEncoder.getPosition(), intendedPosition));
+    // m_armMotor.set(0.5);
 
     SmartDashboard.putNumber("Arm Intended Position", intendedPosition);
     SmartDashboard.putNumber("Arm Relative Position", m_armEncoder.getPosition());
@@ -52,9 +57,9 @@ public class Arm extends SubsystemBase {
   }
 
   public void manualControl(double multiplier) {
-    double movement = RobotContainer.m_driverController.getRightY() * multiplier;
+    double movement = (RobotContainer.m_ps5Controller.getL2Axis() - RobotContainer.m_ps5Controller.getR2Axis()) * multiplier;
 
-    if (RobotContainer.m_driverController.getRightY() > STICK_DEADBAND || RobotContainer.m_driverController.getRightY() < -STICK_DEADBAND) {
+    if (movement > STICK_DEADBAND || movement < -STICK_DEADBAND) {
       if (intendedPosition <= ARM_MIN_ROTATIONS && movement > 0){
         intendedPosition += movement;
       } else if (intendedPosition >= ARM_MAX_ROTATIONS && movement < 0) {
@@ -63,10 +68,10 @@ public class Arm extends SubsystemBase {
         intendedPosition += movement;
       }
     } else {
-      if (intendedPosition > 32) {
-        intendedPosition = 32;
-      } else if (intendedPosition < 0) {
-        intendedPosition = 0;
+      if (intendedPosition > ARM_MAX_ROTATIONS) {
+        intendedPosition = ARM_MAX_ROTATIONS;
+      } else if (intendedPosition < ARM_MIN_ROTATIONS) {
+        intendedPosition = ARM_MIN_ROTATIONS;
       }
     }
   }

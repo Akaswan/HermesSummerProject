@@ -13,11 +13,13 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
     public TalonFXConfiguration swerveDriveFXConfig;
     public CANCoderConfiguration swerveCanCoderConfig;
+    public CANCoderConfiguration clawCanCoderConfig;
 
     public CTREConfigs(){
         swerveAngleFXConfig = new TalonFXConfiguration();
         swerveDriveFXConfig = new TalonFXConfiguration();
         swerveCanCoderConfig = new CANCoderConfiguration();
+        clawCanCoderConfig = new CANCoderConfiguration();
 
         /* Swerve Angle Motor Configurations */
         SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
@@ -52,5 +54,11 @@ public final class CTREConfigs {
         swerveCanCoderConfig.sensorDirection = CAN_CODER_INVERT;
         swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+
+        clawCanCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        clawCanCoderConfig.sensorDirection = true;
+        clawCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        clawCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        clawCanCoderConfig.magnetOffsetDegrees = CLAW_ENCODER_OFFSET - 20;
     }
 }

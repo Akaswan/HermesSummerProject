@@ -14,6 +14,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
@@ -42,11 +43,11 @@ public class SwerveDrive extends SubsystemBase {
 
     public final Field2d m_field = new Field2d();
 
-    public HolonomicDriveController trajController;
+    public PPHolonomicDriveController trajController;
 
-    private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); // TODO pass in id and canbus CAN.pigeon);
+    // private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); // TODO pass in id and canbus CAN.pigeon);
 
-    private double m_simYaw;
+    // private double m_simYaw;
 
     public SwerveDrive() {
         gyro = new AHRS(SPI.Port.kMXP, (byte)50);
@@ -73,14 +74,14 @@ public class SwerveDrive extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        m_pigeon.setYaw(0);
+        // m_pigeon.setYaw(0);
 
         swerveOdometry = new SwerveDriveOdometry(SWERVE_KINEMATICS, getYaw(), getModulePositions(), new Pose2d());
 
-        trajController = new HolonomicDriveController(
-            new PIDController(1, 0, 0), new PIDController(1, 0, 0),
-            new ProfiledPIDController(1, 0.25, .01, 
-                new TrapezoidProfile.Constraints(6.28, 3.14)));
+        trajController = new PPHolonomicDriveController(
+            new PIDController(2.5, 0, 0), 
+            new PIDController(2.5, 0, 0),
+            new PIDController(1, 0, 0));
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -142,13 +143,14 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        if (RobotBase.isReal()) {
+        // if (RobotBase.isReal()) {
             return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - (-(gyro.getYaw()+180))) : Rotation2d.fromDegrees(-(gyro.getYaw()+180));
-        } else {
-            double[] ypr = new double[3];
-            m_pigeon.getYawPitchRoll(ypr);
-            return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
-        }
+        // } 
+        // else {
+        //     double[] ypr = new double[3];
+        //     m_pigeon.getYawPitchRoll(ypr);
+        //     return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+        // }
         
     }
 
@@ -172,19 +174,23 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(angleDeg);
     }
 
-    public PathPlannerTrajectory generateTrajectory(Pose2d start, Pose2d end) {
-        double mps = 0;
+    public double test(Pose2d start, Pose2d end) {
+        return start.getX() - end.getX();
+    }
 
-        for(SwerveModule mod : mSwerveMods){
-          mps += mod.getState().speedMetersPerSecond;    
-        }
+    public PathPlannerTrajectory generateTrajectory(Pose2d start, Pose2d end, Rotation2d headingStart, Rotation2d headingEnd) {
+        // double mps = 0;[]\
+
+        // for(SwerveModule mod : mSwerveMods){
+        //   mps += mod.getState().speedMetersPerSecond;    
+        // }
         
-        mps /= mSwerveMods.length;
+        // mps /= mSwerveMods.length;
 
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
             new PathConstraints(4, 3), 
-            new PathPoint(start.getTranslation(), getAngleToPose(start, end), start.getRotation(), mps),
-            new PathPoint(end.getTranslation(), getAngleToPose(start, end), end.getRotation()) 
+            new PathPoint(start.getTranslation(), headingStart, start.getRotation()),
+            new PathPoint(end.getTranslation(), headingEnd, end.getRotation()) 
         );
 
         return trajectory;
@@ -232,24 +238,24 @@ public class SwerveDrive extends SubsystemBase {
             }
         }
 
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
-        }
+        // for(SwerveModule mod : mSwerveMods){
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+        // }
 
         m_field.setRobotPose(swerveOdometry.getPoseMeters());
-        SmartDashboard.putNumber("X", Units.metersToFeet(swerveOdometry.getPoseMeters().getX()));
-        SmartDashboard.putNumber("Y", Units.metersToFeet(swerveOdometry.getPoseMeters().getY()));
-        SmartDashboard.putNumber("A", (swerveOdometry.getPoseMeters().getRotation().getDegrees()));
+        // SmartDashboard.putNumber("X", Units.metersToFeet(swerveOdometry.getPoseMeters().getX()));
+        // SmartDashboard.putNumber("Y", Units.metersToFeet(swerveOdometry.getPoseMeters().getY()));
+        // SmartDashboard.putNumber("A", (swerveOdometry.getPoseMeters().getRotation().getDegrees()));
     }
 
-    @Override
-    public void simulationPeriodic() {
-      ChassisSpeeds chassisSpeed = SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
-      m_simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
+    // @Override
+    // public void simulationPeriodic() {
+    //   ChassisSpeeds chassisSpeed = SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
+    //   m_simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
   
-      Unmanaged.feedEnable(20);
-      m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
-    }
+    //   Unmanaged.feedEnable(20);
+    //   m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
+    // }
 }

@@ -19,47 +19,59 @@ public class Constants {
 
     // Arm Constants \\
 
-    public static final int ARM_MOTOR_ID = 1;
+    public static final int ARM_MOTOR_ID = 21;
 
-    public static final double ARM_P = 1.0;
+    public static final double ARM_P = 0.15;
     public static final double ARM_I = 0.0;
     public static final double ARM_D = 0.0;
 
 
-    public static final double ARM_MAX_VELOCITY = 1.75;
-    public static final double ARM_MAX_ACCELERATION = 0.75;
+    public static final double ARM_MAX_VELOCITY = 75;
+    public static final double ARM_MAX_ACCELERATION = 60;
 
     public static final double ARM_MIN_ROTATIONS = 0.0;
-    public static final double ARM_MAX_ROTATIONS = 32.0;
+    public static final double ARM_MAX_ROTATIONS = 108;
 
     public static final double ARM_MANUAL_SPEED = 1.0;
 
-    public static final double MID_CONE_SETPOINT = 5.0;
-    public static final double MID_CUBE_SETPOINT = 3.0;
-    public static final double LOW_GOAL_SETPOINT = 1.0;
-    public static final double STOW_SETPOINT = 0.0;
+    public static final double MID_CONE_SETPOINT = 85;
+    public static final double MID_CUBE_SETPOINT = 90;
+    public static final double LOW_GOAL_SETPOINT = 114;
+    public static final double PICK_UP = 104;
+    public static final double STOW_SETPOINT = 9;
 
     // Claw Constants \\
 
-    public static final int CLAW_MOTOR_ID = 2;
+    public static final int CLAW_MOTOR_ID = 20;
 
-    public static final double CLAW_P = 1.0;
+    public static final double CLAW_P = 0.019; //.065
     public static final double CLAW_I = 0.0;
-    public static final double CLAW_D = 0.0;
+    public static final double CLAW_D = 0.0005; // .001
 
-    public static final double CLAW_MAX_AMPERAGE = 20.0;
+    public static final double CLAW_MAX_AMPERAGE = 175;
 
     public static final double CLAW_MIN_ROTATIONS = 0.0;
-    public static final double CLAW_MAX_ROTATIONS = 32.0;
+    public static final double CLAW_MIN_ROTATIONS_ABS = 20;
+    public static final double CLAW_MAX_ROTATIONS = 55;
+    public static final double CLAW_MAX_ROTATIONS_ABS = 215;
 
-    public static final double CUBE_MIN_SETPOINT = 16.0;
-    public static final double CUBE_MAX_SETPOINT = 18.0;
+    public static final double OPEN_CLAW_ROTATIONS = 18.5;
+    public static final double OPEN_CLAW_ROTATIONS_ABS = 90;
 
-    public static final double CONE_MIN_SETPOINT = 4.0;
-    public static final double CONE_MAX_SETPOINT = 6.0;
+    public static final double CUBE_MIN_SETPOINT = 45;
+    public static final double CUBE_MAX_SETPOINT = 60;
+
+    public static final double CONE_MIN_SETPOINT = 25;
+    public static final double CONE_MAX_SETPOINT = 40;
 
     public static final double CLAW_MAX_VELOCITY = 1.75;
     public static final double CLAW_MAX_ACCELERATION = 0.75;
+
+    public static final double CLAW_MANUAL_SPEED = .25;
+
+    public static final int CLAW_ENCODER_ID = 9;
+    
+    public static final double CLAW_ENCODER_OFFSET = 148.448;
 
     // Drivebase Constants \\
 
