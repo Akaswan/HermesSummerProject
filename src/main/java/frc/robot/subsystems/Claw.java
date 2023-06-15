@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -12,14 +11,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.commands.ToggleClaw;
 
 import static frc.robot.utilities.Constants.*;
 
@@ -41,11 +37,6 @@ public class Claw extends SubsystemBase {
 
   ArrayList<Double> amperageHistory = new ArrayList<Double>(Collections.nCopies(20, 0.0));
   double amperageHistorySum = 0.0;
-
-  // private final TrapezoidProfile.Constraints m_constraints =
-  //   new TrapezoidProfile.Constraints(CLAW_MAX_ACCELERATION, CLAW_MAX_VELOCITY);
-  // private final ProfiledPIDController m_controller =
-  //   new ProfiledPIDController(CLAW_P, CLAW_I, CLAW_D, m_constraints, KDT);
 
   private final PIDController m_controller = 
     new PIDController(CLAW_P, CLAW_I, CLAW_D);
@@ -113,14 +104,6 @@ public class Claw extends SubsystemBase {
     }
   }
 
-  // public void getClosed() {
-  //   if (intendedPosition < CUBE_MIN_SETPOINT - 5) {
-  //     clawClosed = true;
-  //   } else {
-  //     clawClosed = false;
-  //   }
-  // }
-
   public boolean getLimitSwitch() {
     return limitSwitch.get();
   }
@@ -144,9 +127,9 @@ public class Claw extends SubsystemBase {
 
     if (intendedPosition <= 5 && movement > 0){
       intendedPosition += movement;
-    } else if (intendedPosition >= CLAW_MAX_ROTATIONS_ABS && movement < 0) {
+    } else if (intendedPosition >= CLAW_MAX_ROTATIONS && movement < 0) {
       intendedPosition += movement;
-    } else if (CLAW_MIN_ROTATIONS_ABS < intendedPosition && intendedPosition < CLAW_MAX_ROTATIONS_ABS) {
+    } else if (CLAW_MIN_ROTATIONS < intendedPosition && intendedPosition < CLAW_MAX_ROTATIONS) {
       intendedPosition += movement;
     }
   }

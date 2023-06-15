@@ -48,15 +48,15 @@ public class Constants {
     public static final double CLAW_I = 0.0;
     public static final double CLAW_D = 0.0005; // .001
 
-    public static final double CLAW_MAX_AMPERAGE = 175;
+    // public static final double CLAW_MAX_AMPERAGE = 175;
 
-    public static final double CLAW_MIN_ROTATIONS = 0.0;
-    public static final double CLAW_MIN_ROTATIONS_ABS = 20;
-    public static final double CLAW_MAX_ROTATIONS = 55;
-    public static final double CLAW_MAX_ROTATIONS_ABS = 215;
+    // public static final double CLAW_MIN_ROTATIONS = 0.0;
+    public static final double CLAW_MIN_ROTATIONS = 10;
+    // public static final double CLAW_MAX_ROTATIONS = 55;
+    public static final double CLAW_MAX_ROTATIONS = 215;
 
-    public static final double OPEN_CLAW_ROTATIONS = 18.5;
-    public static final double OPEN_CLAW_ROTATIONS_ABS = 90;
+    // public static final double OPEN_CLAW_ROTATIONS = 18.5;
+    public static final double OPEN_CLAW_ROTATIONS = 90;
 
     public static final double CUBE_MIN_SETPOINT = 45;
     public static final double CUBE_MAX_SETPOINT = 60;

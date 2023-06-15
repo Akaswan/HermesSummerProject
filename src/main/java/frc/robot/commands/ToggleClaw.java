@@ -21,9 +21,11 @@ public class ToggleClaw extends InstantCommand {
   @Override
   public void initialize() {
     if (m_claw.clawClosed) {
-      m_claw.setPosition(CLAW_MAX_ROTATIONS);
+      m_claw.setPosition(OPEN_CLAW_ROTATIONS);
+      m_claw.setClawClosed(false);
     } else {
       m_claw.setPosition(CLAW_MIN_ROTATIONS);
+      m_claw.setClawClosed(true);
     }
   }
 }
