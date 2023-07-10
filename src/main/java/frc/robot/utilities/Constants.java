@@ -85,6 +85,9 @@ public class Constants {
     public static final Pose2d GRID_7 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(14.8528), Rotation2d.fromDegrees(0));
     public static final Pose2d GRID_8 = new Pose2d(Units.feetToMeters(4.2091), Units.feetToMeters(16.6842), Rotation2d.fromDegrees(0));
 
+    public static final Pose2d pos1 = new Pose2d(Units.feetToMeters(0), Units.feetToMeters(2), Rotation2d.fromDegrees(90));
+    public static final Pose2d pos2 = new Pose2d(Units.feetToMeters(2), Units.feetToMeters(0), Rotation2d.fromDegrees(90));
+
     public static final Pose2d[] GRID_POSITIONS = {
         GRID_0,
         GRID_1,

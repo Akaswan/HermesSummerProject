@@ -8,8 +8,12 @@ import static frc.robot.utilities.Constants.*;
 
 import java.util.HashMap;
 
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.commands.CreatePath;
+import frc.robot.commands.FollowPPPath;
 // import frc.robot.commands.FollowPPPath;
 // import frc.robot.commands.LimitSwitchPickUp;
 import frc.robot.commands.ManualArmControl;
@@ -83,17 +88,23 @@ public class RobotContainer {
     m_claw.setDefaultCommand(new ManualClawControl(-ARM_MANUAL_SPEED, m_claw));
 
     configureBindings();
+
+    SmartDashboard.putData("Follow Path", new FollowPPPath(m_swerveDrive, m_swerveDrive.getPose(), pos1));
+    SmartDashboard.putData("Follow Path 2", new FollowPPPath(m_swerveDrive, m_swerveDrive.getPose(), pos2));
+
   }
 
   private void configureBindings() {
     // Driver Controls \\
+    
     // new JoystickButton(m_ps5Controller, PS4Controller.Button.).onTrue(new FollowPPPath(m_swerveDrive, m_swerveDrive.getPose(), new Pose2d(0, Units.feetToMeters(4), Rotation2d.fromDegrees(0))));
     // new JoystickButton(m_driverController, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> m_swerveDrive.zeroGyro()));
     // new JoystickButton(m_driverController, XboxController.Button.kBack.value).onTrue(new FollowPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1));
     m_ps5Controller.triangle().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_claw.setClawClosed(false)), new InstantCommand(() -> m_claw.setPosition(OPEN_CLAW_ROTATIONS))));
     m_ps5Controller.square().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_claw.setClawMaxAmperage(450)), new InstantCommand(() -> m_claw.setPosition(CLAW_MIN_ROTATIONS))));
     m_ps5Controller.circle().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_claw.setClawMaxAmperage(175)), new InstantCommand(() -> m_claw.setPosition(CLAW_MIN_ROTATIONS + 20))));
-    m_ps5Controller.cross().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_claw.setPosition(10))));
+    // m_ps5Controller.cross().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_claw.setPosition(10))));
+    // m_ps5Controller.cross().onTrue(new FollowPPPath(m_swerveDrive, m_swerveDrive.getPose(), GRID_1));
 
     m_ps5Controller.povUp().onTrue(new InstantCommand(() -> m_arm.setPosition(MID_CONE_SETPOINT)));
     m_ps5Controller.povRight().onTrue(new InstantCommand(() -> m_arm.setPosition(PICK_UP)));

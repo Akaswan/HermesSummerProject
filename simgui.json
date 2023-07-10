@@ -17,7 +17,9 @@
       "/SmartDashboard/1-Mid": "Command",
       "/SmartDashboard/2-Mid": "Command",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Follow Manual Path": "Command",
       "/SmartDashboard/Follow Path": "Command",
+      "/SmartDashboard/Follow Path 2": "Command",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
     "windows": {
@@ -39,6 +41,21 @@
           "weight": 1.0
         },
         "units": "inches",
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Follow Manual Path": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Follow Path": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Follow Path 2": {
         "window": {
           "visible": true
         }

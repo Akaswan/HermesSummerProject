@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -34,7 +35,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.commands.FollowPath;
+// import frc.robot.commands.FollowPath;
+import frc.robot.commands.FollowPPPath;
 
 public class SwerveDrive extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
@@ -45,9 +47,9 @@ public class SwerveDrive extends SubsystemBase {
 
     public PPHolonomicDriveController trajController;
 
-    // private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); // TODO pass in id and canbus CAN.pigeon);
+    private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); // TODO pass in id and canbus CAN.pigeon);
 
-    // private double m_simYaw;
+    private double m_simYaw;
 
     public SwerveDrive() {
         gyro = new AHRS(SPI.Port.kMXP, (byte)50);
@@ -74,7 +76,7 @@ public class SwerveDrive extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        // m_pigeon.setYaw(0);
+        m_pigeon.setYaw(0);
 
         swerveOdometry = new SwerveDriveOdometry(SWERVE_KINEMATICS, getYaw(), getModulePositions(), new Pose2d());
 
@@ -143,14 +145,14 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        // if (RobotBase.isReal()) {
+        if (RobotBase.isReal()) {
             return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - (-(gyro.getYaw()+180))) : Rotation2d.fromDegrees(-(gyro.getYaw()+180));
-        // } 
-        // else {
-        //     double[] ypr = new double[3];
-        //     m_pigeon.getYawPitchRoll(ypr);
-        //     return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
-        // }
+        } 
+        else {
+            double[] ypr = new double[3];
+            m_pigeon.getYawPitchRoll(ypr);
+            return (INVERT_GYRO) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+        }
         
     }
 
@@ -165,78 +167,85 @@ public class SwerveDrive extends SubsystemBase {
         double deltaY = end.getY() - start.getY();
         double angleRad = Math.atan2(deltaY, deltaX);
 
-        
-        double angleDeg = Math.toDegrees(angleRad);
-
-        
-        angleDeg = (angleDeg + 360) % 360;
-
-        return Rotation2d.fromDegrees(angleDeg);
+        return Rotation2d.fromRadians(angleRad);
     }
 
     public double test(Pose2d start, Pose2d end) {
         return start.getX() - end.getX();
     }
 
-    public PathPlannerTrajectory generateTrajectory(Pose2d start, Pose2d end, Rotation2d headingStart, Rotation2d headingEnd) {
-        // double mps = 0;[]\
+    // public PathPlannerTrajectory generateTrajectory(Pose2d start, Pose2d end, Rotation2d headingStart, Rotation2d headingEnd) {
+    //     // double mps = 0;[]\
 
-        // for(SwerveModule mod : mSwerveMods){
-        //   mps += mod.getState().speedMetersPerSecond;    
-        // }
+    //     // for(SwerveModule mod : mSwerveMods){
+    //     //   mps += mod.getState().speedMetersPerSecond;    
+    //     // }
         
-        // mps /= mSwerveMods.length;
+    //     // mps /= mSwerveMods.length;
 
-        PathPlannerTrajectory trajectory = PathPlanner.generatePath(
-            new PathConstraints(4, 3), 
-            new PathPoint(start.getTranslation(), headingStart, start.getRotation()),
-            new PathPoint(end.getTranslation(), headingEnd, end.getRotation()) 
-        );
+    //     // Rotation2d headingStart = getAngleToPose(end, start);
+    //     // Rotation2d headingEnd = getAngleToPose(start, end);
 
-        return trajectory;
-      }
+    //     Pose2d startnew = swerveOdometry.getPoseMeters();
+
+    //     PathPlannerTrajectory trajectory = PathPlanner.generatePath(
+    //         new PathConstraints(4, 3), 
+    //         new PathPoint(startnew.getTranslation(), headingStart, startnew.getRotation()),
+    //         new PathPoint(end.getTranslation(), headingEnd, end.getRotation()) 
+    //     );
+
+    //     SmartDashboard.putNumber("heading start", headingStart.getDegrees());
+    //     SmartDashboard.putNumber("heading end", headingEnd.getDegrees());
+    //     SmartDashboard.putNumber("start X", 5);
+    //     SmartDashboard.putNumber("start Y", 10);
+
+    //     return trajectory;
+    //   }
 
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
+        SmartDashboard.putNumber("Odometry X", swerveOdometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("Odometry Y", swerveOdometry.getPoseMeters().getY());
+        SmartDashboard.putNumber("Rotation", getYaw().getDegrees());
 
-        boolean[] gridLow = {
-            SmartDashboard.getBoolean("Grid-0 Low", false),
-            SmartDashboard.getBoolean("Grid-1 Low", false),
-            SmartDashboard.getBoolean("Grid-2 Low", false),
-            SmartDashboard.getBoolean("Grid-3 Low", false),
-            SmartDashboard.getBoolean("Grid-4 Low", false),
-            SmartDashboard.getBoolean("Grid-5 Low", false),
-            SmartDashboard.getBoolean("Grid-6 Low", false),
-            SmartDashboard.getBoolean("Grid-7 Low", false),
-            SmartDashboard.getBoolean("Grid-8 Low", false),
-            SmartDashboard.getBoolean("Grid-9 Low", false)
-        };
+        // boolean[] gridLow = {
+        //     SmartDashboard.getBoolean("Grid-0 Low", false),
+        //     SmartDashboard.getBoolean("Grid-1 Low", false),
+        //     SmartDashboard.getBoolean("Grid-2 Low", false),
+        //     SmartDashboard.getBoolean("Grid-3 Low", false),
+        //     SmartDashboard.getBoolean("Grid-4 Low", false),
+        //     SmartDashboard.getBoolean("Grid-5 Low", false),
+        //     SmartDashboard.getBoolean("Grid-6 Low", false),
+        //     SmartDashboard.getBoolean("Grid-7 Low", false),
+        //     SmartDashboard.getBoolean("Grid-8 Low", false),
+        //     SmartDashboard.getBoolean("Grid-9 Low", false)
+        // };
 
-        boolean[] gridMid = {
-            SmartDashboard.getBoolean("Grid-0 Mid", false),
-            SmartDashboard.getBoolean("Grid-1 Mid", false),
-            SmartDashboard.getBoolean("Grid-2 Mid", false),
-            SmartDashboard.getBoolean("Grid-3 Mid", false),
-            SmartDashboard.getBoolean("Grid-4 Mid", false),
-            SmartDashboard.getBoolean("Grid-5 Mid", false),
-            SmartDashboard.getBoolean("Grid-6 Mid", false),
-            SmartDashboard.getBoolean("Grid-7 Mid", false),
-            SmartDashboard.getBoolean("Grid-8 Mid", false),
-            SmartDashboard.getBoolean("Grid-9 Mid", false)
-        };
+        // boolean[] gridMid = {
+        //     SmartDashboard.getBoolean("Grid-0 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-1 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-2 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-3 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-4 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-5 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-6 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-7 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-8 Mid", false),
+        //     SmartDashboard.getBoolean("Grid-9 Mid", false)
+        // };
 
-        for (int i = 0; i < gridLow.length; i++) {
-            if (gridLow[i]) {
-                SmartDashboard.putBoolean("Grid-" + i + " Low", false);
-                new ParallelCommandGroup(new FollowPath(RobotContainer.m_swerveDrive, getPose(), GRID_POSITIONS[i]), new InstantCommand(() -> RobotContainer.m_arm.setPosition(LOW_GOAL_SETPOINT))).schedule();
-            }
+        // for (int i = 0; i < gridLow.length; i++) {
+        //     if (gridLow[i]) {
+        //         SmartDashboard.putBoolean("Grid-" + i + " Low", false);
+        //         new ParallelCommandGroup(new FollowPPPath(RobotContainer.m_swerveDrive, getPose(), GRID_POSITIONS[i]), new InstantCommand(() -> RobotContainer.m_arm.setPosition(LOW_GOAL_SETPOINT))).schedule();
+        //     }
 
-            if (gridMid[i]) {
-                SmartDashboard.putBoolean("Grid-" + i + " Mid", false);
-                new ParallelCommandGroup(new FollowPath(RobotContainer.m_swerveDrive, getPose(), GRID_POSITIONS[i]), new InstantCommand(() -> RobotContainer.m_arm.setPosition(MID_CONE_SETPOINT))).schedule();
-            }
-        }
+        //     if (gridMid[i]) {
+        //         SmartDashboard.putBoolean("Grid-" + i + " Mid", false);
+        //         new ParallelCommandGroup(new FollowPPPath(RobotContainer.m_swerveDrive, getPose(), GRID_POSITIONS[i]), new InstantCommand(() -> RobotContainer.m_arm.setPosition(MID_CONE_SETPOINT))).schedule();
+        //     }
+        // }
 
         // for(SwerveModule mod : mSwerveMods){
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
@@ -250,12 +259,12 @@ public class SwerveDrive extends SubsystemBase {
         // SmartDashboard.putNumber("A", (swerveOdometry.getPoseMeters().getRotation().getDegrees()));
     }
 
-    // @Override
-    // public void simulationPeriodic() {
-    //   ChassisSpeeds chassisSpeed = SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
-    //   m_simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
+    @Override
+    public void simulationPeriodic() {
+      ChassisSpeeds chassisSpeed = SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
+      m_simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
   
-    //   Unmanaged.feedEnable(20);
-    //   m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
-    // }
+      Unmanaged.feedEnable(20);
+      m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
+    }
 }
